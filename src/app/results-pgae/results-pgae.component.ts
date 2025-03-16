@@ -1,3 +1,4 @@
+
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -15,22 +16,13 @@ interface Encounter {
   selector: 'app-results-page',
   standalone: true,
   imports: [CommonModule, ResultComponent, PaginatorComponent],
-  template: `
-    <div *ngIf="pokemonName">
-      <h2 class ="overflow-x-auto p-5">Encounters for {{ pokemonName }}</h2>
-      <app-result [encounters]="paginatedEncounters"></app-result>
-      <app-paginator
-        [currentPage]="currentPage"
-        [totalPages]="totalPages"
-        (pageChange)="changePage($event)">
-      </app-paginator>
-    </div>
-  `
+  templateUrl: './results-pgae.component.html',
+  styleUrl: './results-pgae.component.css'
 })
 export class ResultsPageComponent implements OnInit {
   readonly route = inject(ActivatedRoute);
   readonly http = inject(HttpClient);
-  private searchService = inject(SearchStateService);
+  readonly searchService = inject(SearchStateService);
 
   pokemonName = '';
   encounters = [];
@@ -97,3 +89,4 @@ export class ResultsPageComponent implements OnInit {
     this.paginatedEncounters = this.encounters.slice(start, start + this.limit);
   }
 }
+

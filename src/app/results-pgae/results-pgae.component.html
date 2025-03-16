@@ -1,0 +1,18 @@
+ <div *ngIf="pokemonName; else noSearch">
+  <h2 class="overflow-x-auto p-5">Encounters for {{ pokemonName }}</h2>
+  
+  <app-result [encounters]="paginatedEncounters"></app-result>
+
+  <app-paginator
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChange)="changePage($event)">
+  </app-paginator>
+</div>
+
+<!-- Template for no search results -->
+<ng-template #noSearch>
+  <div class="p-5 text-gray-500 text-center">
+    No Pokémon searched yet.
+  </div>
+</ng-template>
