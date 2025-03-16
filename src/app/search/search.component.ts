@@ -42,34 +42,47 @@ export class SearchComponent implements OnInit {
   }
   onInputChange() {
     clearTimeout(this.debounceTimer);
-    
+  
     this.debounceTimer = setTimeout(() => {
       const trimmedName = this.pokemonName.trim();
-
-      if (trimmedName && trimmedName !== this.previousSearchText) {
-        this.previousSearchText = trimmedName;
-        this.fetchPokemonList();
-        this.filterSuggestions();
-      } else if (!trimmedName) {
+  
+      if (!trimmedName) {
         this.suggestions = [];
+        return;
       }
-    }, 300); // Debounce delay in milliseconds
+  
+      // ✅ Fetch again if list is empty (like after navigating back)
+      if (!this.isPokemonListFetched || this.pokemonList.length === 0) {
+        this.fetchPokemonList();
+      } else {
+        this.filterSuggestions();
+      }
+  
+      this.previousSearchText = trimmedName;
+    }, 300);
   }
-
-
+  
   fetchPokemonList() {
     this.searchService.fetchPokemonList().subscribe((response) => {
       this.pokemonList = response.results.map((pokemon: any) => pokemon.name);
+      this.isPokemonListFetched = true;
+      this.filterSuggestions(); // ✅ Ensure suggestions are updated after fetching
     });
   }
-
+  
   filterSuggestions() {
-    this.suggestions = this.pokemonName.trim()
-      ? this.pokemonList.filter((name) =>
-          name.includes(this.pokemonName.toLowerCase())
-        )
-      : [];
+    const searchValue = this.pokemonName.trim().toLowerCase();
+  
+    if (!searchValue) {
+      this.suggestions = [];
+      return;
+    }
+  
+    this.suggestions = this.pokemonList.filter((name) =>
+      name.toLowerCase().includes(searchValue)
+    );
   }
+  
 
   onSuggestionClick(suggestion: string) {
     this.pokemonName = suggestion;

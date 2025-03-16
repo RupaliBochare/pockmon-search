@@ -35,15 +35,27 @@ export class ResultsPageComponent implements OnInit {
   }
 
   private fetchEncounters(): void {
-    this.searchService.fetchEncounters(this.pokemonName).subscribe((results) => {
-      this.encounters = results;
-      this.totalPages = Math.ceil(results.length / this.limit);
-      this.searchService.setState({
-        encounters: results,
-        totalPages: this.totalPages,
-        currentPage: this.currentPage,
-      });
-      this.updatePaginatedData();
+    this.searchService.fetchEncounters(this.pokemonName).subscribe({
+      next: (results) => {
+        this.encounters = results;
+        if(this.encounters.length > 1) {
+          this.totalPages = Math.ceil(results.length / this.limit);
+          this.searchService.setState({
+            encounters: results,
+            totalPages: this.totalPages,
+            currentPage: this.currentPage,
+          });
+          this.updatePaginatedData();
+        }
+      
+      },
+      error: () => {
+        this.encounters = [];
+        this.paginatedEncounters = [];
+        this.searchService.setState({
+          encounters: []
+        });
+      }
     });
   }
 
