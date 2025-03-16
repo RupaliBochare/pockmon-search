@@ -18,23 +18,44 @@ export class SearchComponent implements OnInit {
   private pokemonList: string[] = [];
   private previousSearchText: string = '';
   private previousPage: number = 1;
+  private isPokemonListFetched = false;
+  private debounceTimer: any;
 
   constructor(
     readonly http: HttpClient,
     readonly router: Router,
-    private searchService: SearchStateService
+    readonly searchService: SearchStateService
   ) {} 
 
   ngOnInit() {
     // need to make it conditionly like if have priviose search text then dont call fetchPokemonList 
-    this.fetchPokemonList();
+   
     const { pokemonName, currentPage  } = this.searchService.getState();
     if (pokemonName) {
       this.pokemonName = pokemonName;
       this.previousSearchText = pokemonName;
       this.previousPage = currentPage;
+      this.isPokemonListFetched = true;
+    } else {
+      this.fetchPokemonList();
     }
   }
+  onInputChange() {
+    clearTimeout(this.debounceTimer);
+    
+    this.debounceTimer = setTimeout(() => {
+      const trimmedName = this.pokemonName.trim();
+
+      if (trimmedName && trimmedName !== this.previousSearchText) {
+        this.previousSearchText = trimmedName;
+        this.fetchPokemonList();
+        this.filterSuggestions();
+      } else if (!trimmedName) {
+        this.suggestions = [];
+      }
+    }, 300); // Debounce delay in milliseconds
+  }
+
 
   fetchPokemonList() {
     this.searchService.fetchPokemonList().subscribe((response) => {
@@ -64,13 +85,6 @@ export class SearchComponent implements OnInit {
     if (this.pokemonName.trim()) {
       const isSameSearch = this.pokemonName === this.previousSearchText;
       const targetPage = isSameSearch ? this.previousPage : 1;
-
-      // // Update the state only if search text has changed
-      // this.searchService.setState({
-      //   pokemonName: this.pokemonName,
-      //   currentPage: targetPage,
-      // });
-
       this.router.navigate(['/results'], {
         queryParams: { name: this.pokemonName, page: targetPage },
       });

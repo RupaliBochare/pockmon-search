@@ -1,16 +1,10 @@
-
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ResultComponent } from '../result/result.component';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { SearchStateService } from '../core/services/search-state.service';
-
-interface Encounter {
-  location_area: { name: string };
-  version_details: { version: { name: string }; max_chance: number }[];
-}
+import { Encounter } from '../core/services/search-state.service';
 
 @Component({
   selector: 'app-results-page',
@@ -21,12 +15,11 @@ interface Encounter {
 })
 export class ResultsPageComponent implements OnInit {
   readonly route = inject(ActivatedRoute);
-  readonly http = inject(HttpClient);
   readonly searchService = inject(SearchStateService);
 
   pokemonName = '';
-  encounters = [];
-  paginatedEncounters = [];
+  encounters: Encounter[] = [];
+  paginatedEncounters: Encounter[] = [];
 
   currentPage = 1;
   totalPages = 0;
@@ -37,45 +30,21 @@ export class ResultsPageComponent implements OnInit {
       this.pokemonName = params['name'] || this.searchService.getState().pokemonName;
       this.currentPage = +params['page'] || this.searchService.getState().currentPage;
 
-      const cachedState = this.searchService.getState();
-
-      // ✅ Check for cached data or fetch if needed
-      if (cachedState.pokemonName === this.pokemonName && cachedState.encounters.length > 0) {
-        this.useCachedData(cachedState);
-      } else {
-        this.fetchEncounters();
-      }
+      this.fetchEncounters();
     });
   }
 
-  private useCachedData(cachedState: any) {
-    this.encounters = cachedState.encounters;
-    this.totalPages = cachedState.totalPages;
-    this.updatePaginatedData();
-  }
-
   private fetchEncounters(): void {
-    this.http.get<any>(`https://pokeapi.co/api/v2/pokemon/${this.pokemonName}/encounters`).subscribe(
-      (results) => {
-        this.encounters = results;
-        this.totalPages = Math.ceil(results.length / this.limit);
-        this.searchService.setState({
-          pokemonName: this.pokemonName,
-          encounters: results,
-          totalPages: this.totalPages,
-          currentPage: this.currentPage,
-        });
-        this.updatePaginatedData();
-      },
-      (error) => {
-        this.searchService.setState({
-          pokemonName: this.pokemonName,
-          encounters: [],
-          totalPages: this.totalPages,
-          currentPage: this.currentPage,
-        });
-        console.error('Error fetching encounters:', error)}
-    );
+    this.searchService.fetchEncounters(this.pokemonName).subscribe((results) => {
+      this.encounters = results;
+      this.totalPages = Math.ceil(results.length / this.limit);
+      this.searchService.setState({
+        encounters: results,
+        totalPages: this.totalPages,
+        currentPage: this.currentPage,
+      });
+      this.updatePaginatedData();
+    });
   }
 
   changePage(page: number): void {
@@ -89,4 +58,3 @@ export class ResultsPageComponent implements OnInit {
     this.paginatedEncounters = this.encounters.slice(start, start + this.limit);
   }
 }
-

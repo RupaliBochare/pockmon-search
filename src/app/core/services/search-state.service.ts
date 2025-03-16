@@ -26,7 +26,7 @@ export class SearchStateService {
     totalPages: 0,
   };
 
-  private stateSubject = new BehaviorSubject<SearchState>(this.state);
+  readonly stateSubject = new BehaviorSubject<SearchState>(this.state);
 
   constructor(private readonly http: HttpClient) {}
 
@@ -50,7 +50,10 @@ export class SearchStateService {
         this.state.pokemonName = pokemonName;
         this.stateSubject.next(this.state);
       }),
-      catchError(() => of([]))
+      catchError((error) => {
+        console.error(`Error fetching encounters for ${pokemonName}:`, error);
+        return of([]);
+      })
     );
   }
 
