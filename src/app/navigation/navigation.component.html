@@ -1,0 +1,48 @@
+<nav class="flex items-center justify-between px-5 text-sm border-b mb-5">
+  <!-- Logo Section -->
+  <section class="logo flex-none">
+    <a routerLink="/" class="text-lg font-bold">Pokemon Database</a>
+  </section>
+  
+  <!-- Main Routes Section -->
+  <section class="routes-main flex-1 flex flex-row gap-5 min-w-0 px-5">
+    <a class="py-5" routerLink="/">Search</a>
+    <a class="py-5" routerLink="/results">Results</a>
+  </section>
+  
+  <!-- Utility Routes Section -->
+  <section #utilityRef class="routes-utility flex flex-row gap-5">
+    
+    <!-- Full Menu Links (Visible on Medium Screens and larger) -->
+    <div class="hidden md:flex gap-5">
+      <a class="py-5" routerLink="/about">About</a>
+      <a class="py-5" routerLink="/contact">Contact</a>
+      <a class="py-5" routerLink="/imprint">Imprint</a>
+      <a class="py-5" routerLink="/login">Login</a>
+      <a class="py-5" routerLink="/register">Register</a>
+      <a class="py-5" routerLink="/settings">Settings</a>
+      <a class="py-5" routerLink="/terms">Terms</a>
+      <a class="py-5" routerLink="/privacy">Privacy</a>
+    </div>
+
+    <!-- More Dropdown Button (Visible on Small Screens only) -->
+    <div class="md:hidden relative">
+      <button (click)="toggleDropdown()" class="py-5 flex items-center gap-1">
+        More <span class="text-xs">▾</span>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div *ngIf="showDropdown" class="absolute right-0 top-full bg-white border rounded-md shadow-md flex flex-col w-48 z-10">
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/about">About</a>
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/contact">Contact</a>
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/imprint">Imprint</a>
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/login">Login</a>
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/register">Register</a>
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/settings">Settings</a>
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/terms">Terms</a>
+        <a class="px-4 py-2 hover:bg-gray-100" routerLink="/privacy">Privacy</a>
+      </div>
+    </div>
+
+  </section>
+</nav>

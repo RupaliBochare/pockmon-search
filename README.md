@@ -1,59 +1,38 @@
-# PockmonSearch
+# Test assignment - Pokemon search
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+You are given a several components and api endpoints to work with.
 
-## Development server
+Those components are:
+- `Navigation` - a component that renders a list of links in header
+- `Search` - a component that renders a search form with autosuggest
+- `Results` - a component that renders a table with data from the api
+- `Paginator` - a component that renders a pagination for the table
 
-To start a local development server, run:
+The api endpoints are:
+- `GET https://pokeapi.co/api/v2/pokemon?limit=100` - returns a list of pokemons, will be used by `Search` compoenent to render autosuggest dropdown
+- `GET https://pokeapi.co/api/v2/pokemon/${pokemonName}/encounters` - returns a list of locations where the pokemon can be found, will be used by `Results` component to render the table
 
-```bash
-ng serve
-```
+Your task is to implement the following:
+- Project requirements: Create a project using `create-react-app`, `nextjs` or any other boilerplate you like. We've tested the components using `nextjs`, hence the 'use client' directive at the top of the code.
+  - Be sure to use typescript.
+  - Use `tailwindcss` for styling.
+  - Make sure you have a robust folder structure for future scaling of the project. Be prepared to explain your choices.
+- Routing requirements: Create two route paths using any router of choice and add the provided components to the project. 
+  - Each page is supposed to show `Navigation` component at the top.
+  - The first page should have `Search` component and the second page should have `Results` and `Paginator` components. 
+  - When a pokemon is selected from the dropdown or search button clicked, the user should be redirected to the second page with the results of where the selected pokemon can be found (encounters).
+  - Returning back to the first page should keep the search query in the input field.
+  - Returning back to the result page should keep the search results and pagination state, the table can rerender though.
+  - Same on page refresh.
+- Extend the components: 
+  - `Navigation` component should be flexible and push the page links into a dropdown menu [...] one by one when the screen real estate is too small to fit all the links.
+  - `Results` component should not request the data from the api on every pagination interaction. Instead, it should request it only when the new search is executed.
+  - `Paginator` component should be able to handle the pagination of the data on the client side.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+During our review, we will be looking for:
+- Code quality and structure
+- Strong typing
+- Your ability to explain your choices live at 2nd stage interview
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Send us the folder structure of your created workspace without node_modules folder.
+Good luck!

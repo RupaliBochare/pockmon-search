@@ -1,0 +1,29 @@
+
+<div class="overflow-x-auto p-5">
+  <table class="min-w-full table-auto border-collapse">
+    <thead>
+      <tr class="bg-gray-100 border-b">
+        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Location</th>
+        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Version</th>
+        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Chance</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let encounter of paginatedEncounters()">
+        <td class="px-6 py-4 text-sm font-medium text-gray-800">
+          {{ encounter.location_area.name }}
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-800">
+          <div *ngFor="let versionDetail of encounter.version_details">
+            {{ versionDetail.version.name }}:
+          </div>
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-800">
+          <div *ngFor="let versionDetail of encounter.version_details" class="text-left">
+            {{ versionDetail.max_chance }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
