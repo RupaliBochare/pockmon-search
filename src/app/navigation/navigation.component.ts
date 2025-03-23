@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Component, HostListener } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-navigation',
@@ -9,7 +9,13 @@ import { Component, HostListener } from '@angular/core';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css'],
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit{
+  @ViewChild('navRef', {static: true}) navElement!: ElementRef;
+  @ViewChild('utilityRef', {static: true}) utilityRef!: ElementRef;
+  @ViewChild('mainRoutes', {static: true}) routesMainElement!: ElementRef;
+  @ViewChild('logo', {static: true}) logoElement!: ElementRef;
+ 
+
   links = [
     { label: 'About', path: '/about' },
     { label: 'Contact', path: '/contact' },
@@ -25,10 +31,12 @@ export class NavigationComponent {
   hiddenLinks: any[] = [];
   showDropdown = false;
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     this.updateVisibleLinks();
   }
+
+  
 
   ngOnInit() {
     this.updateVisibleLinks();
@@ -39,30 +47,30 @@ export class NavigationComponent {
   }
 
   private updateVisibleLinks() {
-    const navElement = document.querySelector('nav');
-    const routesMainElement = document.querySelector('.routes-main');
-    const logoElement = document.querySelector('.logo');
-
-    // If any required DOM elements are missing, show all links as visible
-    if (!navElement || !routesMainElement || !logoElement) {
+    if (!this.navElement || !this.routesMainElement || !this.logoElement || !this.utilityRef) {
       this.visibleLinks = [...this.links];
       this.hiddenLinks = [];
       return;
     }
+  
+    // Get actual widths
+    const containerWidth = this.navElement.nativeElement.clientWidth;
+    const logoWidth = this.logoElement.nativeElement.clientWidth;
+    const mainRoutesWidth = this.routesMainElement.nativeElement.clientWidth;
 
-    const containerWidth = navElement.clientWidth;
-    const logoWidth = logoElement.clientWidth;
-
-    // Calculate available width for links
+    // Dynamically calculate available width for utility links
     const availableWidth = containerWidth - logoWidth - 300;
+    // Get all existing utility links (before moving to dropdown)
 
-    // Approximate width of each link (adjust based on actual styles)
-    const linkWidth = 60;
-
-    // Calculate the maximum number of links that can fit in the available space
-    const maxVisibleLinks = Math.floor(availableWidth / linkWidth);
-
-    // Ensure visibleLinks and hiddenLinks are set correctly
+    const utilityLinks = Array.from(this.utilityRef.nativeElement.children) as HTMLElement[];
+  
+   
+    let totalUtilityWidth = 0;
+    utilityLinks.forEach((link) => (totalUtilityWidth += link.getBoundingClientRect().width));
+    const perlinkWidth = Math.floor(totalUtilityWidth/ this.links.length +20 ) // here some space
+    
+     // Calculate total width of visible utility links
+    let maxVisibleLinks = Math.floor(availableWidth / perlinkWidth);
     if (maxVisibleLinks >= this.links.length) {
       // All links fit in the available space
       this.visibleLinks = [...this.links];
@@ -77,4 +85,17 @@ export class NavigationComponent {
       this.hiddenLinks = this.links.slice(maxVisibleLinks);
     }
   }
+  
+  /**
+   * Get the actual width of a utility link dynamically
+   */
+  private getLinkWidth(index: number): number {
+    const linkElements = this.utilityRef?.nativeElement.children || [];
+    if (linkElements[index]) {
+      return linkElements[index].getBoundingClientRect().width;
+    }
+    return 0; // Default fallback
+  }
+ 
+  
 }

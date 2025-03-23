@@ -1,11 +1,11 @@
-<nav class="flex items-center justify-between px-5 text-sm border-b mb-5">
+<nav #navRef class="flex items-center justify-between px-5 text-sm border-b mb-5">
   <!-- Logo Section -->
-  <section class="logo flex-none">
+  <section #logo class="logo flex-none">
     <a routerLink="/" class="text-lg font-bold">Pokemon Database</a>
   </section>
 
   <!-- Main Routes Section -->
-  <section class="routes-main flex-1 flex flex-row gap-5 min-w-0 px-5">
+  <section #mainRoutes class="routes-main flex-1 flex flex-row gap-5 min-w-0 px-5">
     <a class="py-5" routerLink="/">Search</a>
     <a class="py-5" routerLink="/results">Results</a>
   </section>
@@ -28,7 +28,7 @@
       </button>
 
       <!-- Dropdown Menu -->
-      <div
+      <div #dropdownMenu
         *ngIf="showDropdown"
         class="absolute right-0 top-full bg-white border rounded-md shadow-md flex flex-col w-48 z-10"
       >

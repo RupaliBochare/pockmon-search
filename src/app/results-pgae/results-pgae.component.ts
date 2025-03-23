@@ -1,67 +1,71 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ResultComponent } from '../result/result.component';
 import { PaginatorComponent } from '../paginator/paginator.component';
-import { SearchStateService , Encounter} from '../core/services/search-state.service';
+import { SearchStateService, Encounter } from '../core/services/search-state.service';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-results-page',
   standalone: true,
   imports: [CommonModule, ResultComponent, PaginatorComponent],
   templateUrl: './results-pgae.component.html',
-  styleUrl: './results-pgae.component.css'
+  styleUrls: ['./results-pgae.component.css']
 })
-export class ResultsPageComponent implements OnInit {
+export class ResultsPageComponent implements OnInit, OnDestroy {
   readonly route = inject(ActivatedRoute);
   readonly searchService = inject(SearchStateService);
 
   pokemonName = '';
+  previousPokemonName = '';
   encounters: Encounter[] = [];
   paginatedEncounters: Encounter[] = [];
 
   currentPage = 1;
   totalPages = 0;
   limit = 10;
+  private subscription!: Subscription;
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.pokemonName = params['name'] || this.searchService.getState().pokemonName;
-      this.currentPage = +params['page'] || this.searchService.getState().currentPage;
-      if (this.pokemonName) {
-        this.fetchEncounters();
-      }
+    this.subscription = this.searchService.getStateObservable().subscribe(state => {
       
+      this.pokemonName = state.pokemonName;
+      this.encounters = state.encounters;
+      this.currentPage = state.currentPage;
+      this.totalPages = state.totalPages;
+      this.updatePaginatedData();
+    });
+
+    this.route.queryParams.subscribe(params => {
+      const pokemonName = params['name'];
+      const currentPage = +params['page'];
+
+      if (pokemonName !== this.pokemonName || currentPage !== this.currentPage) {
+        this.fetchEncounters(pokemonName);
+      }
     });
   }
 
-  private fetchEncounters(): void {
-    this.searchService.fetchEncounters(this.pokemonName).subscribe({
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  private fetchEncounters(pokemonName: string): void {
+    this.searchService.fetchEncounters(pokemonName).subscribe({
       next: (results) => {
-        this.encounters = results;
-        if(this.encounters.length > 1) {
-          this.totalPages = Math.ceil(results.length / this.limit);
-          this.searchService.setState({
-            encounters: results,
-            totalPages: this.totalPages,
-            currentPage: this.currentPage,
-          });
-          this.updatePaginatedData();
-        }
-      
+       // this.searchService.setState({ encounters: results , currentPage: 1});
       },
       error: () => {
-        this.encounters = [];
-        this.paginatedEncounters = [];
-        this.searchService.setState({
-          encounters: []
-        });
+        this.searchService.setState({ encounters: [] });
       }
     });
   }
 
   changePage(page: number): void {
-    this.currentPage = page;
-    this.searchService.setState({ currentPage: this.currentPage });
+    this.searchService.setState({ currentPage: page });
     this.updatePaginatedData();
   }
 

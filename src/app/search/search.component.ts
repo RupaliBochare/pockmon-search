@@ -28,8 +28,6 @@ export class SearchComponent implements OnInit {
   ) {} 
 
   ngOnInit() {
-    // need to make it conditionly like if have priviose search text then dont call fetchPokemonList 
-   
     const { pokemonName, currentPage  } = this.searchService.getState();
     if (pokemonName) {
       this.pokemonName = pokemonName;
@@ -51,7 +49,7 @@ export class SearchComponent implements OnInit {
         return;
       }
   
-      // ✅ Fetch again if list is empty (like after navigating back)
+      // Fetch again if list is empty (like after navigating back)
       if (!this.isPokemonListFetched || this.pokemonList.length === 0) {
         this.fetchPokemonList();
       } else {
@@ -66,7 +64,7 @@ export class SearchComponent implements OnInit {
     this.searchService.fetchPokemonList().subscribe((response) => {
       this.pokemonList = response.results.map((pokemon: any) => pokemon.name);
       this.isPokemonListFetched = true;
-      this.filterSuggestions(); // ✅ Ensure suggestions are updated after fetching
+      this.filterSuggestions(); //  Ensure suggestions are updated after fetching
     });
   }
   

@@ -48,6 +48,7 @@ export class SearchStateService {
         this.state.encounters = results;
         this.state.totalPages = Math.ceil(results.length / 10);
         this.state.pokemonName = pokemonName;
+        this.state.currentPage = 1;
         this.stateSubject.next(this.state);
       }),
       catchError((error) => {
