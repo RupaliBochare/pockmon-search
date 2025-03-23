@@ -14,13 +14,13 @@ export class PaginatorComponent {
 
   goToPreviousPage(): void {
     if (this.currentPage > 1) {
-      this.pageChange.emit(this.currentPage - 1);  // ✅ Emits a number
+      this.pageChange.emit(this.currentPage - 1);  
     }
   }
 
   goToNextPage(): void {
     if (this.currentPage < this.totalPages) {
-      this.pageChange.emit(this.currentPage + 1);  // ✅ Emits a number
+      this.pageChange.emit(this.currentPage + 1);  
     }
   }
 }

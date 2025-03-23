@@ -1,21 +1,18 @@
- <div *ngIf="encounters.length === 0" class="text-center text-gray-500 mt-4">
+<div *ngIf="encounters.length === 0 && pokemonName" class="text-center text-gray-500 mt-4">
   No Pokémon encounters found.
 </div>
- <div *ngIf="pokemonName && encounters.length > 0">
+<div *ngIf="pokemonName">
+  <ng-container *ngIf="encounters.length > 0; else noResults">
   <h2 class="overflow-x-auto p-5">Encounters for {{ pokemonName }}</h2>
- 
+
   <app-result [encounters]="paginatedEncounters"></app-result>
 
-  <app-paginator
-    [currentPage]="currentPage"
-    [totalPages]="totalPages"
-    (pageChange)="changePage($event)">
+  <app-paginator [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="changePage($event)">
   </app-paginator>
+  </ng-container>
+
+  <ng-template #noResults>
+    <div class="text-center text-gray-500 mt-4">No Pokémon encounters found.</div>
+  </ng-template>
 </div>
 
-<!-- Template for no search results -->
-<div *ngIf="!pokemonName">
-  <div class="p-5 text-gray-500 text-center">
-    No Pokémon searched yet.
-  </div>
-</div>

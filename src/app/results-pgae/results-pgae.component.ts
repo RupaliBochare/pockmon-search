@@ -3,9 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ResultComponent } from '../result/result.component';
 import { PaginatorComponent } from '../paginator/paginator.component';
-import { SearchStateService } from '../core/services/search-state.service';
-import { Encounter } from '../core/services/search-state.service';
-
+import { SearchStateService , Encounter} from '../core/services/search-state.service';
 @Component({
   selector: 'app-results-page',
   standalone: true,
@@ -29,8 +27,10 @@ export class ResultsPageComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.pokemonName = params['name'] || this.searchService.getState().pokemonName;
       this.currentPage = +params['page'] || this.searchService.getState().currentPage;
-
-      this.fetchEncounters();
+      if (this.pokemonName) {
+        this.fetchEncounters();
+      }
+      
     });
   }
 
