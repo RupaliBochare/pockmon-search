@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router'; // ✅ Import Router
-import { SearchStateService } from '../core/services/search-state.service';
+import { Router } from '@angular/router';
+import { SearchStateService } from '../../core/services/search-state.service';
+
 
 @Component({
   selector: 'app-search',

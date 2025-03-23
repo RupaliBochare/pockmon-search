@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ResultComponent } from '../result/result.component';
-import { PaginatorComponent } from '../paginator/paginator.component';
-import { SearchStateService, Encounter } from '../core/services/search-state.service';
+
 import { Subscription } from 'rxjs';
+import { PaginatorComponent } from '../../shared/paginator/paginator.component';
+import { Encounter, SearchStateService } from '../../core/services/search-state.service';
 
 @Component({
   selector: 'app-results-page',
