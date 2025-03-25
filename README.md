@@ -27,12 +27,4 @@ Your task is to implement the following:
 - Extend the components: 
   - `Navigation` component should be flexible and push the page links into a dropdown menu [...] one by one when the screen real estate is too small to fit all the links.
   - `Results` component should not request the data from the api on every pagination interaction. Instead, it should request it only when the new search is executed.
-  - `Paginator` component should be able to handle the pagination of the data on the client side.
-
-During our review, we will be looking for:
-- Code quality and structure
-- Strong typing
-- Your ability to explain your choices live at 2nd stage interview
-
-Send us the folder structure of your created workspace without node_modules folder.
-Good luck!
+  - `Paginator` component should be able to handle the pagination of the data on the client side
