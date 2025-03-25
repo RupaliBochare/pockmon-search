@@ -30,7 +30,7 @@ export class SearchStateService {
 
   constructor(private readonly http: HttpClient) {}
 
-  // Fetch Pokémon List with Caching
+  // Fetch Pokémon List 
   fetchPokemonList(): Observable<any> {
     return this.http.get<any>('https://pokeapi.co/api/v2/pokemon?limit=100').pipe(
       catchError(() => of([]))

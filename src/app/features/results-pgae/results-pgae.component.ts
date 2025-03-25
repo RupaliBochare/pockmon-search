@@ -4,8 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ResultComponent } from '../result/result.component';
 
 import { Subscription } from 'rxjs';
-import { PaginatorComponent } from '../../shared/paginator/paginator.component';
+
 import { Encounter, SearchStateService } from '../../core/services/search-state.service';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-results-page',
